@@ -54,6 +54,14 @@ type Record struct {
 	pedantic  bool
 }
 
+func (r Record) Namespace() string {
+	return r.n.namespace()
+}
+
+func (r Record) N() *name {
+	return r.n
+}
+
 func (r Record) getField(fieldName string) (*recordField, error) {
 	for _, field := range r.Fields {
 		if field.Name == fieldName {
@@ -206,7 +214,7 @@ type RecordSetter func(*Record) error
 
 // recordSchemaRaw specifies the schema of the record to create. Schema
 // must be `map[string]interface{}`.
-func recordSchemaRaw(schema interface{}) RecordSetter {
+func RecordSchemaRaw(schema interface{}) RecordSetter {
 	return func(r *Record) error {
 		var ok bool
 		r.schemaMap, ok = schema.(map[string]interface{})
@@ -270,6 +278,22 @@ type recordField struct {
 
 func (rf recordField) String() string {
 	return fmt.Sprintf("%s: %v", rf.Name, rf.Datum)
+}
+
+func (rf recordField) GetSchema() interface{} {
+	return rf.schema
+}
+
+func (rf recordField) CheckHasDefault() bool {
+	return rf.hasDefault
+}
+
+func (rf recordField) GetDefaultValue() interface{} {
+	return rf.defval
+}
+
+func (rf recordField) GetEnclosingNamespace() string {
+	return rf.ens
 }
 
 type recordFieldSetter func(*recordField) error

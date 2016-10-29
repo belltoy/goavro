@@ -33,6 +33,16 @@ type name struct {
 	ens string // enclosing namespace
 }
 
+func (n name) N() string {
+	return n.n
+}
+func (n name) Ns() string {
+	return n.ns
+}
+func (n name) Ens() string {
+	return n.ens
+}
+
 type nameSetter func(*name) error
 
 func newName(setters ...nameSetter) (*name, error) {

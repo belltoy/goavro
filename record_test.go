@@ -101,11 +101,11 @@ func TestRecordBailsWithoutName(t *testing.T) {
 	schema["fields"] = recordFields
 
 	schema["name"] = 5
-	_, err := NewRecord(recordSchemaRaw(schema))
+	_, err := NewRecord(RecordSchemaRaw(schema))
 	checkErrorFatal(t, err, "ought to be non-empty string")
 
 	schema["name"] = ""
-	_, err = NewRecord(recordSchemaRaw(schema))
+	_, err = NewRecord(RecordSchemaRaw(schema))
 	checkError(t, err, "ought to be non-empty string")
 }
 
@@ -113,22 +113,22 @@ func TestRecordBailsWithoutFields(t *testing.T) {
 	schema := make(map[string]interface{})
 
 	schema["name"] = "someRecord"
-	_, err := NewRecord(recordSchemaRaw(schema))
+	_, err := NewRecord(RecordSchemaRaw(schema))
 	checkError(t, err, fmt.Errorf("record requires one or more fields"))
 
 	schema["fields"] = 5
-	_, err = NewRecord(recordSchemaRaw(schema))
+	_, err = NewRecord(RecordSchemaRaw(schema))
 	checkError(t, err, fmt.Errorf("record fields ought to be non-empty array"))
 
 	schema["fields"] = make([]interface{}, 0)
 	// Empty unions are only checked if RecordPedantic is set
-	_, err = NewRecord(recordSchemaRaw(schema), RecordPedantic())
+	_, err = NewRecord(RecordSchemaRaw(schema), RecordPedantic())
 	checkError(t, err, fmt.Errorf("record fields ought to be non-empty array"))
 
 	var fields []interface{}
 	fields = append(fields, "int")
 	schema["fields"] = fields
-	_, err = NewRecord(recordSchemaRaw(schema))
+	_, err = NewRecord(RecordSchemaRaw(schema))
 	checkError(t, err, fmt.Errorf("expected: map[string]interface{}; received: string"))
 }
 
